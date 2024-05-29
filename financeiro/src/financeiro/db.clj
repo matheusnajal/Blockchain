@@ -18,5 +18,9 @@
     (if (despesa? transacao)
       (- acumulado valor)
       (+ acumulado valor))))
+
 (defn saldo []
   (reduce calcular 0 @registros))
+
+(defn transacoes-do-tipo [tipo]
+  (filter #(= tipo (:tipo %)) (transacoes)))
