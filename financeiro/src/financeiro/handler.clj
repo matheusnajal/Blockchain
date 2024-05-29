@@ -2,7 +2,8 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [cheshire.core :as json]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.defaults :refer [wrap-defaults
+                                              api-defaults]]
             [ring.middleware.json :refer [wrap-json-body]]
             [financeiro.db :as db]
             [financeiro.transacoes :as transacoes]))
@@ -20,13 +21,11 @@
       (-> (db/registrar (:body requisicao))
           (como-json 201))
       (como-json {:mensagem "Requisição inválida"} 422)))
-
-  (GET "/transacoes" []
-    (como-json {:transacoes (db/transacoes)}))
-  (GET "/receitas" []
-    (como-json {:transacoes (db/transacoes-do-tipo "receita")}))
-  (GET "/despesas" []
-    (como-json {:transacoes (db/transacoes-do-tipo "despesa")}))
+  (GET "/transacoes" {filtros :params}
+    (como-json {:transacoes (if (empty? filtros) (db/transacoes)
+                                (db/transacoes-com-filtro filtros))}))
+  (GET "/receitas" [] (como-json {:transacoes (db/transacoes-do-tipo "receita")}))
+  (GET "/despesas" [] (como-json {:transacoes (db/transacoes-do-tipo "despesa")}))
   (route/not-found "Recurso não encontrado"))
 
 (def app
