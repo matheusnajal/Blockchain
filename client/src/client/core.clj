@@ -23,7 +23,7 @@
                 "4-Sair do programa\n"
                 ">>> "))
   (case (str (read-line))
-    "1" (get-thing "transacoes")
+    "1" (println(get-thing "transacoes"))
     "2" (get-thing "blockchain")
     "3" (post-thing "s")
     "4" (System/exit 0)
