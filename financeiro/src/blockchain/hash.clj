@@ -19,8 +19,5 @@
    (let [current-hash (calculate-sha256 (str last-hash nonce))]
      (if (= (subs current-hash 0 4) "0000")
        (do
-         (println current-hash nonce (subs current-hash 0 4))
          [current-hash nonce])
-       (do
-         (println current-hash nonce (subs current-hash 0 4))
-         (recur last-hash (inc nonce)))))))
+         (recur last-hash (inc nonce))))))
