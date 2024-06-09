@@ -6,7 +6,8 @@
                                               api-defaults]]
             [ring.middleware.json :refer [wrap-json-body]]
             [financeiro.db :as db]
-            [financeiro.transacoes :as transacoes]))
+            [financeiro.transacoes :as transacoes]
+            [blockchain.hash :as hash]))
 
 (defn como-json [conteudo & [status]]
   {:status (or status 200)
