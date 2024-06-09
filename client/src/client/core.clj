@@ -1,35 +1,36 @@
 (ns client.core
-  (:require [compojure.core :refer :all]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [clj-http.client :as client]))
+  (:require [clj-http.client :as client]
+            [client.hash :refer [proof-of-work]]
+            [cheshire.core :as json]))
 
-(defn- get-google []
-  (client/get "http://www.google.com"))
+(defn- post-thing [endpoint body]
+  (-> (str "http://localhost:3000/" endpoint)
+      (client/post)
+      (:body)
+      (json/parse-string)))
 
-(defn- mostrar-transacao []
-  )
+(defn- get-thing [endpoint]
+  (-> (str "http://localhost:3000/" endpoint)
+      (client/get)
+      (:body)
+      (json/parse-string)))
 
-(defn- mostrar-blockchain []
-  )
-
-(defn- fazer-transacao []
-  )
 
 (defn- input-loop []
-  (printf "1-%s\n2-%s\n3-%s\n4-%s\n>>"
-          "Mostrar transação"
-          "Mostrar blockchain"
-          "Fazer transação"
-          "Sair do programa")
-  (case (str (read))
-    "1" (mostrar-transacao)
-    "2" (mostrar-blockchain)
-    "3" (fazer-transacao)
-    "4" "TCHAU"
-    (recur))
+  (println (str "1-Mostrar transação\n"
+                "2-Mostrar blockchain\n"
+                "3-Fazer transação\n"
+                "4-Sair do programa\n"
+                ">>> "))
+  (case (str (read-line))
+    "1" (get-thing "transacoes")
+    "2" (get-thing "blockchain")
+    "3" (post-thing "s")
+    "4" (System/exit 0)
+    :nada)
   (recur))
 
 
 (defn -main []
   (println "BEM-VINDO")
-  (println (input-loop)))
+  (input-loop))
