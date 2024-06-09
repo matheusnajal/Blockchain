@@ -6,7 +6,6 @@
             [ring.middleware.json :refer [wrap-json-body]]
             [financeiro.db :as db]
             [financeiro.transacoes :as transacoes]
-            [blockchain.hash :as hash]
             [financeiro.blockchain :as blockchain]))
 
 (defn como-json [conteudo & [status]]
@@ -30,6 +29,9 @@
                                 (db/transacoes-com-filtro filtros))}))
   (GET "/receitas" [] (como-json {:transacoes (db/transacoes-do-tipo "receita")}))
   (GET "/despesas" [] (como-json {:transacoes (db/transacoes-do-tipo "despesa")}))
+  (GET "/blockchain" [] (como-json @blockchain/blockchain))
+  ;(POST "/blockchain" [] )
+
   (route/not-found "Recurso não encontrado"))
 
 (def app
