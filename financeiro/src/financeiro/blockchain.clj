@@ -3,7 +3,6 @@
 
 (def blockchain
   (atom [{:index 0
-          :timestamp (System/currentTimeMillis)
           :transacoes []
           :previous-hash "0"
           :hash "genesis-hash"
@@ -15,11 +14,9 @@
 (defn criar-bloco [transacao previous-hash]
   (let [ultimo (ultimo-bloco)
         index (inc (:index ultimo))
-        timestamp (System/currentTimeMillis)
         transacoes (conj (:transacoes ultimo) transacao)
         [hash nonce] (hash/proof-of-work previous-hash)]
     {:index index
-     :timestamp timestamp
      :transacoes transacoes
      :previous-hash previous-hash
      :hash hash

@@ -8,7 +8,7 @@
 (defn- post-thing [endpoint body]
   (-> (str "http://localhost:3000/" endpoint)
       (client/post { :content-type :json
-                     :body body})))
+                    :body body})))
 
 (defn- get-thing [endpoint]
   (-> (str "http://localhost:3000/" endpoint)
@@ -19,7 +19,10 @@
 (defn show-transaction []
   (let [transacoes (get (get-thing "transacoes") "transacoes")]
     (if (seq transacoes)
-      (pprint/print-table (get (get-thing "transacoes") "transacoes"))
+      (do
+        (pprint/print-table (get (get-thing "transacoes") "transacoes"))
+        (newline)
+        )
       (println "Nenhuma transação registrada"))))
 
 (defn create-transaction []
@@ -37,4 +40,11 @@
   )
 
 (defn show-blockchain []
-  (pprint/print-table (get-thing "blockchain")))
+  (dorun (map #(println (format
+                   "\nBloco: %s\nNonce: %s\nTransacoes: %s\nPrevious hash: %s\nHash: %s\n"
+                   (get % "index")
+                   (get % "nonce")
+                   (get % "transacoes")
+                   (get % "previous-hash")
+                   (get % "hash")
+                   )) (get-thing "blockchain"))))
