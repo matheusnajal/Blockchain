@@ -1,19 +1,16 @@
 (ns financeiro.db)
 
-(defn- despesa? [transacao]
-  (= (:tipo transacao) "despesa"))
-
-(defn- calcular [acumulado transacao]
-  (let [valor (:valor transacao)]
-    (if (despesa? transacao)
-      (- acumulado valor)
-      (+ acumulado valor))))
-
 (def registros
   (atom []))
 
 (defn saldo []
-  (reduce calcular 0 @registros))
+  (reduce (fn [acumulado transacao]
+            (let [valor (:valor transacao)]
+              (if (= "despesa" (:tipo transacao))
+                (- acumulado valor)
+                (+ acumulado valor))))
+          0
+          @registros))
 
 (defn limpar []
   (reset! registros []))
