@@ -19,8 +19,8 @@
   (POST "/transacoes" requisicao
     (if (transacoes/valida? (:body requisicao))
       (let [transacao (:body requisicao)
-            registrado (db/registrar transacao)
-            bloco (blockchain/adicionar-bloco transacao)]
+            registrado (db/registrar transacao)]
+        (blockchain/adicionar-bloco transacao)
         (como-json registrado 201))
       (como-json {:mensagem "Requisição inválida"} 422)))
   (GET "/transacoes" {filtros :params}
@@ -30,7 +30,6 @@
   (GET "/receitas" [] (como-json {:transacoes (db/transacoes-do-tipo "receita")}))
   (GET "/despesas" [] (como-json {:transacoes (db/transacoes-do-tipo "despesa")}))
   (GET "/blockchain" [] (como-json @blockchain/blockchain))
-  ;(POST "/blockchain" [] )
 
   (route/not-found "Recurso não encontrado"))
 
