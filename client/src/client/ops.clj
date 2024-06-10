@@ -31,11 +31,10 @@
                 :tipo (get input 1) }))
     (if (not (< (count input) 2))
       (post-thing "transacoes" (json/generate-string
-                                 {:valor (get input 0)
+                                 {:valor (Integer/parseInt(get input 0))
                                   :tipo (get input 1) }))
       (recur)))
   )
 
 (defn show-blockchain []
-  (get-thing "blockchain"))
-
+  (pprint/print-table (get-thing "blockchain")))
